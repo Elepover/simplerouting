@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleRouting.Routing", "SimpleRouting.Routing\SimpleRouting.Routing.csproj", "{1167D32E-9237-4BF9-9638-D2EA22936BD0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleRouting.Tests", "SimpleRouting.Tests\SimpleRouting.Tests.csproj", "{AFD0CC38-DD43-4F97-98DF-97DD11E48A06}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1167D32E-9237-4BF9-9638-D2EA22936BD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1167D32E-9237-4BF9-9638-D2EA22936BD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1167D32E-9237-4BF9-9638-D2EA22936BD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1167D32E-9237-4BF9-9638-D2EA22936BD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFD0CC38-DD43-4F97-98DF-97DD11E48A06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFD0CC38-DD43-4F97-98DF-97DD11E48A06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFD0CC38-DD43-4F97-98DF-97DD11E48A06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFD0CC38-DD43-4F97-98DF-97DD11E48A06}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
