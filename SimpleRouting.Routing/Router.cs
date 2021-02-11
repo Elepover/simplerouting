@@ -29,9 +29,11 @@ namespace SimpleRouting.Routing
 
         #region Interface implementations
         #region IRoutable implementation
+
         /// <inheritdoc cref="IRoutable{TIncoming}.IsEligible"/>
-        public virtual bool IsEligible(TIncoming incoming) =>
-            RegisteredRoutes.Any(route => route.IsEligible(incoming));
+        public virtual bool IsEligible(TIncoming incoming)
+            => incoming is not null && RegisteredRoutes.Any(route => route.IsEligible(incoming));
+            
 
         /// <inheritdoc cref="IRoutable{TIncoming}.ProcessAsync"/>
         public virtual Task ProcessAsync(IRoutingArgs<TIncoming> args)
