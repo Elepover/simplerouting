@@ -2,7 +2,8 @@ using System.Threading.Tasks;
 
 namespace SimpleRouting.Routing
 {
-    public interface IRoutable<TIncoming>
+    public interface IRoutable<TIncoming, TRoutingArgs>
+        where TRoutingArgs : IRoutingArgs<TIncoming>
     {
         /// <summary>
         /// Checks if the route is eligible for execution.
@@ -12,6 +13,6 @@ namespace SimpleRouting.Routing
         /// <summary>
         /// Process this route asynchronously.
         /// </summary>
-        Task ProcessAsync(IRoutingArgs<TIncoming> args);
+        Task ProcessAsync(TRoutingArgs args);
     }
 }

@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 
 namespace SimpleRouting.Routing
 {
-    public class Router<TIncoming> :
-        IRoutable<TIncoming>,
-        IEnumerable<IRoutable<TIncoming>>
+    public class Router<TIncoming, TRoutingArgs> :
+        IRoutable<TIncoming, TRoutingArgs>, 
+        IEnumerable<IRoutable<TIncoming, TRoutingArgs>>
+        where TRoutingArgs : IRoutingArgs<TIncoming>
     {
         #region Constructors and operators
         public Router() {}
@@ -16,33 +17,33 @@ namespace SimpleRouting.Routing
         /// Get the route at <paramref name="index"/>.
         /// </summary>
         /// <param name="index">The route's index.</param>
-        public IRoutable<TIncoming> this[int index]
+        public IRoutable<TIncoming, TRoutingArgs> this[int index]
             => RegisteredRoutes.ElementAt(index);
         #endregion
 
         #region Variables
         /// <summary>
-        /// Registered routes in this <see cref="Router{TIncoming}"/>
+        /// Registered routes in this <see cref="Router{TIncoming, TRoutingArgs}"/>
         /// </summary>
-        public LinkedList<IRoutable<TIncoming>> RegisteredRoutes { get; } = new();
+        public LinkedList<IRoutable<TIncoming, TRoutingArgs>> RegisteredRoutes { get; } = new();
         #endregion
 
         #region Interface implementations
         #region IRoutable implementation
 
-        /// <inheritdoc cref="IRoutable{TIncoming}.IsEligible"/>
+        /// <inheritdoc cref="IRoutable{TIncoming, TRoutingArgs}.IsEligible"/>
         public virtual bool IsEligible(TIncoming incoming)
             => incoming is not null && RegisteredRoutes.Any(route => route.IsEligible(incoming));
             
 
-        /// <inheritdoc cref="IRoutable{TIncoming}.ProcessAsync"/>
-        public virtual Task ProcessAsync(IRoutingArgs<TIncoming> args)
-            => RouteAsync(args.IncomingData);
+        /// <inheritdoc cref="IRoutable{TIncoming, TRoutingArgs}.ProcessAsync"/>
+        public virtual Task ProcessAsync(TRoutingArgs args)
+            => RouteAsync(args);
         #endregion
 
         #region IEnumerable implementation
-        public IEnumerator<IRoutable<TIncoming>> GetEnumerator()
-            => new RouterEnumerator<IRoutable<TIncoming>>(RegisteredRoutes);
+        public IEnumerator<IRoutable<TIncoming, TRoutingArgs>> GetEnumerator()
+            => new RouterEnumerator<IRoutable<TIncoming, TRoutingArgs>>(RegisteredRoutes);
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         #endregion
@@ -52,21 +53,20 @@ namespace SimpleRouting.Routing
         /// Add a new route to the last of the routing queue.
         /// </summary>
         /// <param name="newRoute">New route to add.</param>
-        public void Add(IRoutable<TIncoming> newRoute)
+        public void Add(IRoutable<TIncoming, TRoutingArgs> newRoute)
             => RegisteredRoutes.AddLast(newRoute);
         
         /// <summary>
         /// Route the incoming <typeparamref name="TIncoming"/> and return # of processed routes.
         /// </summary>
-        /// <param name="incoming">Incoming <typeparamref name="TIncoming"/>.</param>
+        /// <param name="args">Routing arguments.</param>
         /// <returns># of processed routes.</returns>
-        public virtual async Task<int> RouteAsync(TIncoming incoming)
+        public virtual async Task<int> RouteAsync(TRoutingArgs args)
         {
             var routed = 0;
             foreach (var route in RegisteredRoutes)
             {
-                var args = new BasicRoutingArgs<TIncoming>(incoming);
-                if (!route.IsEligible(incoming)) continue;
+                if (!route.IsEligible(args.IncomingData)) continue;
                 await route.ProcessAsync(args);
                 routed++;
                 if (!args.Continue) break;
