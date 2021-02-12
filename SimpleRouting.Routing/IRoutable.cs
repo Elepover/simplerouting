@@ -2,14 +2,14 @@ using System.Threading.Tasks;
 
 namespace SimpleRouting.Routing
 {
-    public interface IRoutable<TIncoming, TRoutingArgs>
-        where TRoutingArgs : IRoutingArgs<TIncoming>
+    public interface IRoutable<TRoutingArgs>
+        where TRoutingArgs : IRoutingArgs
     {
         /// <summary>
         /// Checks if the route is eligible for execution.
         /// </summary>
-        /// <param name="incoming">Incoming <typeparamref name="TIncoming"/>.</param>
-        bool IsEligible(TIncoming incoming);
+        /// <param name="args">Incoming <typeparamref name="TRoutingArgs"/>.</param>
+        bool IsEligible(TRoutingArgs args);
         /// <summary>
         /// Process this route asynchronously.
         /// </summary>

@@ -1,8 +1,7 @@
 namespace SimpleRouting.Routing
 {
-    public interface IRoutingArgs<TIncoming>
+    public interface IRoutingArgs
     {
         bool Continue { get; set; }
-        TIncoming IncomingData { get; set; }
     }
 }
