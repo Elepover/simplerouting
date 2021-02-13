@@ -108,10 +108,10 @@ namespace SimpleRouting.Tests
                     },
                     new IncrementRoute(), // hit: 10
                     new IncrementRoute(), // miss: 10 is not eligible
-                    new IncrementRoute(), // miss: 10 is not eligible
+                    new StopRoute(), // stop routing altogether
+                    new IncrementRoute()
                 },
-                new IncrementRoute(), // 2nd route: ok
-                new StopRoute(), // stop routing altogether
+                new IncrementRoute(),
                 new IncrementRoute()
             };
             
@@ -119,7 +119,7 @@ namespace SimpleRouting.Tests
             var routed = await router.RouteAsync(new BasicRoutingContext<IntWrapper>(wrapper));
             
             Assert.Equal(10, wrapper.Int); // should be 10, see comments above
-            Assert.Equal(2, routed);
+            Assert.Equal(1, routed);
         }
     }
 }
