@@ -1,6 +1,6 @@
 namespace SimpleRouting.Routing
 {
-    public interface IRoutingArgs
+    public interface IRoutingContext
     {
         bool Continue { get; set; }
     }

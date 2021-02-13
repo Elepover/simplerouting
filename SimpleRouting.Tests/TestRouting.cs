@@ -18,7 +18,7 @@ namespace SimpleRouting.Tests
         [Fact]
         public async Task TestEmptyRouting()
         {
-            var router = new Router<BasicRoutingArgs<object>>();
+            var router = new Router<BasicRoutingContext<object>>();
             Assert.Equal(0, await router.RouteAsync(null!));
         }
 
@@ -32,14 +32,14 @@ namespace SimpleRouting.Tests
         {
             const int incrementRoutes = 3;
 
-            var router = new Router<BasicRoutingArgs<IntWrapper>>();
+            var router = new Router<BasicRoutingContext<IntWrapper>>();
             Times(incrementRoutes, () => router.Add(new IncrementRoute()));
 
-            var args = new BasicRoutingArgs<IntWrapper>(new IntWrapper(input));
-            var routed = await router.RouteAsync(args);
+            var context = new BasicRoutingContext<IntWrapper>(new IntWrapper(input));
+            var routed = await router.RouteAsync(context);
             
             Assert.Equal(expectedEligible, routed);
-            Assert.Equal(expectedResult, args.Data.Int);
+            Assert.Equal(expectedResult, context.Data.Int);
         }
     }
 }

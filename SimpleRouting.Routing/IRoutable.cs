@@ -2,17 +2,17 @@ using System.Threading.Tasks;
 
 namespace SimpleRouting.Routing
 {
-    public interface IRoutable<TRoutingArgs>
-        where TRoutingArgs : IRoutingArgs
+    public interface IRoutable<TRoutingContext>
+        where TRoutingContext : IRoutingContext
     {
         /// <summary>
         /// Checks if the route is eligible for execution.
         /// </summary>
-        /// <param name="args">Incoming <typeparamref name="TRoutingArgs"/>.</param>
-        bool IsEligible(TRoutingArgs args);
+        /// <param name="context">Incoming <typeparamref name="TRoutingContext"/>.</param>
+        bool IsEligible(TRoutingContext context);
         /// <summary>
         /// Process this route asynchronously.
         /// </summary>
-        Task ProcessAsync(TRoutingArgs args);
+        Task ProcessAsync(TRoutingContext context);
     }
 }

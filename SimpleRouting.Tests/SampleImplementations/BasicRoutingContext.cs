@@ -2,9 +2,9 @@ using SimpleRouting.Routing;
 
 namespace SimpleRouting.Tests.SampleImplementations
 {
-    public class BasicRoutingArgs<T> : IRoutingArgs
+    public class BasicRoutingContext<T> : IRoutingContext
     {
-        public BasicRoutingArgs(T data)
+        public BasicRoutingContext(T data)
         {
             Data = data;
         }

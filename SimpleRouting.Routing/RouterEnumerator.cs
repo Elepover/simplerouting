@@ -5,14 +5,14 @@ using System.Linq;
 
 namespace SimpleRouting.Routing
 {
-    public class RouterEnumerator<TIncoming> : IEnumerator<TIncoming>
+    public class RouterEnumerator<T> : IEnumerator<T>
     {
-        public RouterEnumerator(IEnumerable<TIncoming> incomingObjects)
+        public RouterEnumerator(IEnumerable<T> incomingObjects)
         {
             _incomingObjects = incomingObjects;
         }
         
-        private readonly IEnumerable<TIncoming> _incomingObjects;
+        private readonly IEnumerable<T> _incomingObjects;
         private int _position = -1;
         
         public bool MoveNext()
@@ -26,22 +26,8 @@ namespace SimpleRouting.Routing
             _position = -1;
         }
 
-        public TIncoming Current
-        {
-            get
-            {
-                try
-                {
-                    // because we use LinkedList<T> for better insertion performance
-                    // use LINQ ElementAt() extension method to get object.
-                    return _incomingObjects.ElementAt(_position);
-                }
-                catch (IndexOutOfRangeException)
-                {
-                    throw new InvalidOperationException();
-                }
-            }   
-        }
+        public T Current =>
+            _incomingObjects.ElementAtOrDefault(_position) ?? throw new IndexOutOfRangeException();
 
         object IEnumerator.Current => Current!;
 
