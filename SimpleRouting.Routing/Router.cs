@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,9 +68,22 @@ namespace SimpleRouting.Routing
                 if (!route.IsEligible(context)) continue;
                 await route.ProcessAsync(context);
                 routed++;
-                if (!context.Continue) break;
+                switch (context.Target)
+                {
+                    case RouteTarget.Break:
+                    {
+                        context.Target = RouteTarget.Continue;
+                        goto ret;
+                    }
+                    case RouteTarget.Stop:
+                    {
+                        context.Target = RouteTarget.Stop;
+                        goto ret;
+                    }
+                    case RouteTarget.Continue: continue;
+                }
             }
-
+            ret:
             return routed;
         }
     }

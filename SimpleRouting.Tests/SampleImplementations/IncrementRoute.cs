@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using SimpleRouting.Routing;
+using SimpleRouting.Routing.Extensions;
 
 namespace SimpleRouting.Tests.SampleImplementations
 {
@@ -13,7 +14,7 @@ namespace SimpleRouting.Tests.SampleImplementations
         public Task ProcessAsync(BasicRoutingContext<IntWrapper> context)
         {
             context.Data.Int++;
-            context.Continue = true;
+            context.Continue();
             return Task.CompletedTask;
         }
     }

@@ -41,5 +41,85 @@ namespace SimpleRouting.Tests
             Assert.Equal(expectedEligible, routed);
             Assert.Equal(expectedResult, context.Data.Int);
         }
+
+        [Fact]
+        public async Task TestShortCircuiting()
+        {
+            var router = new Router<BasicRoutingContext<IntWrapper>>()
+            {
+                new Router<BasicRoutingContext<IntWrapper>>()
+                {
+                    new IncrementRoute(), // hit
+                    new ShortCircuitRoute(), // break, jump all 3 lines below
+                    new IncrementRoute(),
+                    new IncrementRoute(),
+                    new IncrementRoute(),
+                },
+                new IncrementRoute() // here
+            };
+
+            var wrapper = new IntWrapper() {Int = 0};
+            await router.RouteAsync(new BasicRoutingContext<IntWrapper>(wrapper));
+            
+            Assert.Equal(2, wrapper.Int);
+        }
+
+        [Fact]
+        public async Task TestBreakRouting()
+        {
+            var router = new Router<BasicRoutingContext<IntWrapper>>()
+            {
+                new Router<BasicRoutingContext<IntWrapper>>()
+                {
+                    new Router<BasicRoutingContext<IntWrapper>>()
+                    {
+                        new IncrementRoute(), // hit
+                        new IncrementRoute(), // hit
+                        new StopRoute(), // break, stop all routing
+                        new IncrementRoute()
+                    },
+                    new IncrementRoute(),
+                },
+                new IncrementRoute(),
+                new IncrementRoute(),
+                new IncrementRoute()
+            };
+            
+            var wrapper = new IntWrapper() {Int = 0};
+            await router.RouteAsync(new BasicRoutingContext<IntWrapper>(wrapper));
+            
+            Assert.Equal(2, wrapper.Int); // should be 2 instead of 7
+        }
+        
+        [Fact]
+        public async Task TestCombinedRouting()
+        {
+            var router = new Router<BasicRoutingContext<IntWrapper>>()
+            {
+                new Router<BasicRoutingContext<IntWrapper>>() // 1st route: ok
+                {
+                    new Router<BasicRoutingContext<IntWrapper>>()
+                    {
+                        new IncrementRoute(), // hit: 8
+                        new IncrementRoute(), // hit: 9
+                        new ShortCircuitRoute(), // skip 2 lines below
+                        new IncrementRoute(),
+                        new IncrementRoute()
+                    },
+                    new IncrementRoute(), // hit: 10
+                    new IncrementRoute(), // miss: 10 is not eligible
+                    new IncrementRoute(), // miss: 10 is not eligible
+                },
+                new IncrementRoute(), // 2nd route: ok
+                new StopRoute(), // stop routing altogether
+                new IncrementRoute()
+            };
+            
+            var wrapper = new IntWrapper() {Int = 7};
+            var routed = await router.RouteAsync(new BasicRoutingContext<IntWrapper>(wrapper));
+            
+            Assert.Equal(10, wrapper.Int); // should be 10, see comments above
+            Assert.Equal(2, routed);
+        }
     }
 }

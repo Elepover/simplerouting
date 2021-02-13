@@ -8,8 +8,8 @@ namespace SimpleRouting.Tests.SampleImplementations
         {
             Data = data;
         }
-        
-        public bool Continue { get; set; }
+
+        public RouteTarget Target { get; set; } = RouteTarget.Continue;
         
         public T Data { get; set; }
     }
