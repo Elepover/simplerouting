@@ -11,7 +11,7 @@ namespace SimpleRouting.Tests
     {
         private static void Times(int times, Action action)
         {
-            foreach (var i in Enumerable.Range(0, times))
+            foreach (var _ in Enumerable.Range(0, times))
                 action();
         }
         
